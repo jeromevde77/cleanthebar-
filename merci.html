@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merci ! — CleanTheClub</title>
+  <link rel="icon" type="image/png" href="assets/logo-rclh.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Roboto+Slab:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <main class="card">
+    <header class="header">
+      <img class="logo" src="assets/logo-rclh.png" alt="Logo Rugby Club La Hulpe" />
+      <p class="kicker">Rugby Club La Hulpe · ONE TEAM</p>
+      <h1 class="title">Merci<span class="title-accent">!</span></h1>
+      <p class="tagline" id="merci-text">Ton inscription est bien enregistrée. 💚</p>
+
+      <ul class="event-info">
+        <li><span class="ico">📅</span> Rendez-vous le <strong>5 juillet</strong></li>
+        <li><span class="ico">📍</span> Avenue Ernest Solvay 43, 1310 La Hulpe</li>
+        <li><span class="ico">🤝</span> Partage le lien autour de toi !</li>
+      </ul>
+    </header>
+
+    <div class="form">
+      <a class="btn" href="index.html" style="text-decoration:none;text-align:center;display:block;">
+        <span class="btn-label">Inscrire quelqu'un d'autre</span>
+      </a>
+    </div>
+
+    <footer class="footer">
+      <p class="motto">Semper fidelis</p>
+      <p class="sub">Former des joueurs, construire des personnes · Pôle Vie associative</p>
+    </footer>
+  </main>
+
+  <script>
+    // Petit mot personnalisé si le prénom est passé dans l'URL.
+    const params = new URLSearchParams(window.location.search);
+    const prenom = params.get("p");
+    if (prenom) {
+      document.getElementById("merci-text").textContent =
+        "Merci " + decodeURIComponent(prenom) + ", ton inscription est bien enregistrée. 💚";
+    }
+  </script>
+</body>
+</html>

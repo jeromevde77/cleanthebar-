@@ -1,0 +1,221 @@
+/* ===========================================================
+   CleanTheClub — Charte graphique Rugby Club La Hulpe (RCLH)
+   Vert   #0c3327   (pantone 350 C)
+   Bordeaux #701222 (pantone 188 C)
+   Rose   #f00050   (la petite touche)
+   Blanc  #ffffff
+   Titres : Roboto Slab (proche Rockwell) · Texte : KoHo
+   =========================================================== */
+
+:root {
+  --vert: #0c3327;
+  --vert-clair: #14543c;
+  --bordeaux: #701222;
+  --bordeaux-clair: #8e1a2e;
+  --rose: #f00050;
+  --blanc: #ffffff;
+  --gris-texte: #2a2a2a;
+  --gris-doux: #6b6b6b;
+  --ombre: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: "KoHo", system-ui, -apple-system, sans-serif;
+  color: var(--gris-texte);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, var(--vert-clair) 0%, var(--vert) 55%, #07261d 100%);
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  line-height: 1.45;
+}
+
+/* ---- Carte principale ---- */
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--blanc);
+  border-radius: 22px;
+  box-shadow: var(--ombre);
+  overflow: hidden;
+  border-top: 6px solid var(--rose);
+}
+
+/* ---- En-tête ---- */
+.header {
+  text-align: center;
+  padding: 28px 26px 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f4f0 100%);
+}
+
+.logo {
+  width: 110px;
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+}
+
+.kicker {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bordeaux);
+}
+
+.title {
+  font-family: "Roboto Slab", Rockwell, Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 9vw, 3rem);
+  color: var(--vert);
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.title-accent { color: var(--rose); }
+
+.tagline {
+  margin-top: 10px;
+  font-size: 1.02rem;
+  color: var(--gris-doux);
+  font-weight: 500;
+}
+
+.event-info {
+  list-style: none;
+  margin: 18px auto 4px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  font-size: 0.95rem;
+  color: var(--vert);
+  font-weight: 500;
+}
+.event-info .ico { display: inline-block; width: 1.4em; }
+.event-info strong { color: var(--bordeaux); }
+
+/* ---- Formulaire ---- */
+.form {
+  padding: 22px 26px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 14px;
+}
+.row .field { flex: 1; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--vert);
+  letter-spacing: 0.01em;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border: 1.5px solid #d9d6d0;
+  border-radius: 12px;
+  background: #fbfaf8;
+  color: var(--gris-texte);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+input::placeholder { color: #b3afa8; }
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--bordeaux);
+  box-shadow: 0 0 0 3px rgba(112, 18, 34, 0.12);
+}
+
+input:invalid:not(:placeholder-shown) {
+  border-color: var(--rose);
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23701222' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+/* ---- Bouton ---- */
+.btn {
+  position: relative;
+  margin-top: 6px;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--blanc);
+  background: var(--bordeaux);
+  border: none;
+  border-radius: 14px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease;
+  letter-spacing: 0.02em;
+}
+.btn:hover { background: var(--bordeaux-clair); }
+.btn:active { transform: translateY(1px) scale(0.995); }
+.btn:disabled { opacity: 0.75; cursor: progress; }
+
+.btn-spinner {
+  display: none;
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin-left: 10px;
+  vertical-align: -3px;
+  animation: spin 0.7s linear infinite;
+}
+.btn.loading .btn-spinner { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-msg {
+  color: var(--bordeaux);
+  background: #fde8eb;
+  border: 1px solid #f4c2ca;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ---- Pied ---- */
+.footer {
+  text-align: center;
+  padding: 4px 26px 24px;
+}
+.footer .motto {
+  font-family: "Apple Chancery", "Snell Roundhand", cursive;
+  font-style: italic;
+  color: var(--bordeaux);
+  font-size: 1.1rem;
+}
+.footer .sub {
+  font-size: 0.78rem;
+  color: var(--gris-doux);
+  margin-top: 2px;
+}
+
+@media (max-width: 380px) {
+  .row { flex-direction: column; gap: 14px; }
+}
