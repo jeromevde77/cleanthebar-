@@ -97,13 +97,13 @@ L'adresse GitHub est un peu longue à taper. Pour un lien facile à retenir :
 
 1. Va sur [tinyurl.com](https://tinyurl.com).
 2. Colle ton adresse `https://jeromevde77.github.io/cleanthebar-/`.
-3. Dans *« Customize »*, mets un alias mémorisable, par ex. **`cleantheclub`**.
-4. Tu obtiens : `https://tinyurl.com/cleantheclub` — parfait pour les réseaux et le bouche-à-oreille.
+3. Dans *« Customize »*, mets un alias mémorisable, par ex. **`rclh-clean`**.
+4. Tu obtiens : `https://tinyurl.com/rclh-clean` — parfait pour les réseaux et le bouche-à-oreille.
 
 > 🔁 Si tu préfères que le **QR code** pointe vers ce lien court (ou vers un lien `rclh.be`
 > plus tard), regénère-le :
 > ```
-> python3 tools/generate_qr.py https://tinyurl.com/cleantheclub
+> python3 tools/generate_qr.py https://tinyurl.com/rclh-clean
 > ```
 
 ---
