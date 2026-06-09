@@ -87,6 +87,20 @@ body {
   font-weight: 500;
 }
 
+/* Slogan officiel de l'événement (crescendo gris → vert → rose) */
+.slogan {
+  margin-top: 12px;
+  font-family: "Roboto Slab", Rockwell, Georgia, serif;
+  font-weight: 800;
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.slogan span { display: block; }
+.slogan .s1 { color: var(--gris-doux); font-size: 1.15rem; }
+.slogan .s2 { color: var(--vert); font-size: 1.4rem; }
+.slogan .s3 { color: var(--rose); font-size: 1.85rem; }
+
 .event-info {
   list-style: none;
   margin: 18px auto 4px;
