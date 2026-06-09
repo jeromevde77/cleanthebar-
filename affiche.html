@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiche CleanTheClub — à imprimer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Roboto+Slab:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vert: #0c3327;
+      --bordeaux: #701222;
+      --rose: #f00050;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "KoHo", sans-serif;
+      background: #555;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* Format A4 */
+    .poster {
+      width: 210mm;
+      height: 297mm;
+      background:
+        radial-gradient(900px 500px at 50% 0%, #14543c 0%, var(--vert) 60%, #07261d 100%);
+      color: #fff;
+      padding: 22mm 18mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .poster::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 12mm;
+      background: var(--rose);
+    }
+
+    .logo { width: 36mm; margin-top: 6mm; filter: drop-shadow(0 4mm 8mm rgba(0,0,0,.35)); }
+
+    .kicker {
+      margin-top: 5mm;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 4mm;
+      color: #ffd9e1;
+    }
+
+    h1 {
+      font-family: "Roboto Slab", serif;
+      font-weight: 900;
+      font-size: 26mm;
+      line-height: .95;
+      margin-top: 2mm;
+      text-shadow: 0 2mm 6mm rgba(0,0,0,.3);
+    }
+    h1 .the { color: var(--rose); }
+
+    .baseline { font-size: 6mm; font-weight: 500; margin-top: 3mm; color: #eafff5; }
+
+    .infos {
+      margin-top: 7mm;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5mm;
+      font-size: 6mm;
+      font-weight: 600;
+    }
+    .infos .date {
+      background: var(--bordeaux);
+      padding: 3mm 8mm;
+      border-radius: 4mm;
+      font-family: "Roboto Slab", serif;
+      font-size: 8mm;
+      display: inline-block;
+    }
+
+    .qr-zone {
+      margin-top: auto;
+      background: #fff;
+      border-radius: 6mm;
+      padding: 6mm 6mm 4mm;
+      color: var(--vert);
+    }
+    .qr-zone img { width: 62mm; height: 62mm; display: block; }
+    .qr-zone .scan {
+      font-family: "Roboto Slab", serif;
+      font-weight: 700;
+      color: var(--bordeaux);
+      font-size: 5mm;
+      margin-top: 2mm;
+    }
+
+    .link {
+      margin-top: 5mm;
+      font-size: 5.5mm;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    .link small { display: block; font-weight: 400; font-size: 3.6mm; color: #cfe9dd; letter-spacing: .15em; text-transform: uppercase; }
+
+    .motto {
+      margin-top: 6mm;
+      font-family: "Apple Chancery", "Snell Roundhand", cursive;
+      font-style: italic;
+      font-size: 5mm;
+      color: #ffd9e1;
+    }
+
+    /* Barre d'aide à l'écran, masquée à l'impression */
+    .print-hint {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      background: #fff; color: #222; padding: 10px 18px; border-radius: 999px;
+      font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.4); z-index: 10;
+    }
+    .print-hint b { color: var(--bordeaux); }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .print-hint { display: none; }
+      .poster { box-shadow: none; }
+      @page { size: A4; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-hint">📄 Pour imprimer : <b>Ctrl/Cmd + P</b> → Enregistrer en PDF (format A4)</div>
+
+  <div class="poster">
+    <img class="logo" src="assets/logo-rclh.png" alt="Rugby Club La Hulpe" />
+    <p class="kicker">Rugby Club La Hulpe</p>
+    <h1>Clean<span class="the">The</span>Club</h1>
+    <p class="baseline">On nettoie le club ensemble, puis on trinque ! 💪🍻</p>
+
+    <div class="infos">
+      <span class="date">📅 Samedi 5 juillet</span>
+      <span>📍 Avenue Ernest Solvay 43 · 1310 La Hulpe</span>
+    </div>
+
+    <div class="qr-zone">
+      <img src="assets/qr-cleantheclub.png" alt="QR code d'inscription" />
+      <p class="scan">SCANNE-MOI POUR T'INSCRIRE</p>
+    </div>
+
+    <p class="link">
+      tinyurl.com/cleantheclub
+      <small>ou scanne le QR code ci-dessus</small>
+    </p>
+
+    <p class="motto">Semper fidelis · ONE TEAM</p>
+  </div>
+</body>
+</html>

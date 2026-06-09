@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CleanTheClub — Rugby Club La Hulpe</title>
+  <meta name="description" content="Inscris-toi à CleanTheClub, la journée nettoyage & convivialité du Rugby Club La Hulpe le 5 juillet." />
+
+  <!-- Couleurs de partage (réseaux sociaux) -->
+  <meta property="og:title" content="CleanTheClub — Rugby Club La Hulpe" />
+  <meta property="og:description" content="On nettoie le club ensemble le 5 juillet. ONE TEAM 💚 Inscris-toi !" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" type="image/png" href="assets/logo-rclh.png" />
+
+  <!-- Typographies : KoHo (charte) + Roboto Slab (proche de Rockwell pour le web) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Roboto+Slab:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <main class="card">
+    <header class="header">
+      <img class="logo" src="assets/logo-rclh.png" alt="Logo Rugby Club La Hulpe" />
+      <p class="kicker">Rugby Club La Hulpe · ONE TEAM</p>
+      <h1 class="title">Clean<span class="title-accent">The</span>Club</h1>
+      <p class="tagline">On nettoie le club ensemble, puis on trinque. 💪</p>
+
+      <ul class="event-info">
+        <li><span class="ico">📅</span> Samedi <strong>5 juillet</strong></li>
+        <li><span class="ico">📍</span> Avenue Ernest Solvay 43, 1310 La Hulpe</li>
+        <li><span class="ico">🍻</span> Verre de l'amitié offert à la fin</li>
+      </ul>
+    </header>
+
+    <form id="inscription-form" class="form" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" autocomplete="given-name" required placeholder="Ton prénom" />
+        </div>
+        <div class="field">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" autocomplete="family-name" required placeholder="Ton nom" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required placeholder="ton.email@exemple.be" />
+      </div>
+
+      <div class="field">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" name="telephone" autocomplete="tel" required placeholder="0470 12 34 56" />
+      </div>
+
+      <div class="field">
+        <label for="participants">Nombre de participants (toi inclus)</label>
+        <select id="participants" name="participants" required>
+          <option value="1">1 personne</option>
+          <option value="2">2 personnes</option>
+          <option value="3">3 personnes</option>
+          <option value="4">4 personnes</option>
+          <option value="5">5 personnes</option>
+          <option value="6">6 personnes ou plus</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn" id="submit-btn">
+        <span class="btn-label">Je m'inscris</span>
+        <span class="btn-spinner" aria-hidden="true"></span>
+      </button>
+
+      <p class="error-msg" id="error-msg" role="alert" hidden></p>
+    </form>
+
+    <footer class="footer">
+      <p class="motto">Semper fidelis</p>
+      <p class="sub">Former des joueurs, construire des personnes · Pôle Vie associative</p>
+    </footer>
+  </main>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
