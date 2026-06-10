@@ -32,7 +32,8 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 24px 16px;
+  /* + safe-area : évite que le haut passe sous la barre d'état / l'encoche iPhone */
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
   line-height: 1.45;
 }
 
