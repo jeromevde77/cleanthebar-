@@ -7,7 +7,7 @@
    Elle ressemble à :
    https://script.google.com/macros/s/AKfyc.../exec
    =========================================================== */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu_LXdq9lgA_amKJCk62bBqnUcCLaOv1EV3XYWr7bp1KiqcEXBU2kxpBaGZ7EiotU9/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlf8T1pzG-R0xFkQytwkDdhrRM-tGtaRyE2Rh2nEzVkMsXO_GXRuN0-x-Sfxg5gScHBg/exec";
 
 const form = document.getElementById("inscription-form");
 const submitBtn = document.getElementById("submit-btn");
