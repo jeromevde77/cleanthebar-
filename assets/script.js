@@ -7,7 +7,7 @@
    Elle ressemble à :
    https://script.google.com/macros/s/AKfyc.../exec
    =========================================================== */
-const APPS_SCRIPT_URL = "COLLE_ICI_TON_URL_APPS_SCRIPT";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgvD6e7MRtQD-kQU6gaVJ3kcqdrLb6uIMZWgTqHqPkAIH6e_0mVhrWTy8vkPUxMm4/exec";
 
 const form = document.getElementById("inscription-form");
 const submitBtn = document.getElementById("submit-btn");
