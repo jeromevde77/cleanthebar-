@@ -26,7 +26,7 @@ var ENTETES = [
 // --- Email de confirmation envoyé à l'inscrit ---
 var ENVOYER_EMAIL = true; // mettre à false pour désactiver
 var EXPEDITEUR = "Rugby Club La Hulpe";
-var REPONDRE_A = "communication@rclh.be"; // adresse de réponse (mets celle du club)
+var REPONDRE_A = "contact@rugbylahulpe.be"; // adresse de réponse (mets celle du club)
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
