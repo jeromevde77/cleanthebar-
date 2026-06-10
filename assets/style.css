@@ -30,9 +30,10 @@ body {
     radial-gradient(1200px 600px at 50% -10%, var(--vert-clair) 0%, var(--vert) 55%, #07261d 100%);
   min-height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 24px 16px;
+  /* + safe-area : évite que le haut passe sous la barre d'état / l'encoche iPhone */
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
   line-height: 1.45;
 }
 
@@ -86,6 +87,20 @@ body {
   color: var(--gris-doux);
   font-weight: 500;
 }
+
+/* Slogan officiel de l'événement (crescendo gris → vert → rose) */
+.slogan {
+  margin-top: 12px;
+  font-family: "Roboto Slab", Rockwell, Georgia, serif;
+  font-weight: 800;
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.slogan span { display: block; }
+.slogan .s1 { color: var(--gris-doux); font-size: 1.15rem; }
+.slogan .s2 { color: var(--vert); font-size: 1.4rem; }
+.slogan .s3 { color: var(--rose); font-size: 1.85rem; }
 
 .event-info {
   list-style: none;

@@ -1,45 +1,31 @@
 /**
- * CleanTheClub — Rugby Club La Hulpe
- * Backend Google Apps Script : enregistre chaque inscription
- * dans une feuille Google Sheet.
- *
- * Installation : voir GUIDE.md (étape 2).
- * En résumé :
- *   1. Crée un Google Sheet.
- *   2. Extensions > Apps Script, colle ce code.
- *   3. Déployer > Nouveau déploiement > "Application Web"
- *      - Exécuter en tant que : Moi
- *      - Qui a accès : "Tout le monde"
- *   4. Copie l'URL /exec et colle-la dans assets/script.js
+ * Inscription Nettoyage — Rugby Club La Hulpe
+ * Enregistre chaque inscription dans une feuille Google Sheet
+ * et envoie un email de confirmation via Brevo (API transactionnelle).
+ * Le statut de l'email est écrit dans la colonne "Statut email".
  */
 
+var VERSION = "v9";
 var SHEET_NAME = "Inscriptions";
-var ENTETES = [
-  "Horodatage",
-  "Prénom",
-  "Nom",
-  "Email",
-  "Téléphone",
-  "Nb participants",
-];
+var ENTETES = ["Horodatage", "Prénom", "Nom", "Email", "Téléphone", "Nb participants", "Statut email"];
+
+// --- Email de confirmation (via Brevo) ---
+var ENVOYER_EMAIL = true;
+var EXPEDITEUR = "Rugby Club La Hulpe";
+var BREVO_API_KEY = "COLLE_TA_CLE_API_BREVO_ICI";        // clé API v3 (Brevo > SMTP & API)
+var SENDER_EMAIL  = "contact@rugbylahulpe.be";           // doit être un expéditeur VÉRIFIÉ dans Brevo
+var REPONDRE_A    = "contact@rugbylahulpe.be";           // adresse de réponse
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(20000); // évite les écritures simultanées
-
+    lock.waitLock(20000);
     var sheet = getSheet_();
     var p = (e && e.parameter) || {};
-
-    sheet.appendRow([
-      new Date(),
-      p.prenom || "",
-      p.nom || "",
-      p.email || "",
-      p.telephone || "",
-      p.participants || "",
-    ]);
-
+    sheet.appendRow([new Date(), p.prenom||"", p.nom||"", p.email||"", p.telephone||"", p.participants||"", ""]);
+    var row = sheet.getLastRow();
+    var statut = envoyerConfirmation_(p);
+    sheet.getRange(row, 7).setValue(statut);
     return jsonOut_({ result: "ok" });
   } catch (err) {
     return jsonOut_({ result: "error", message: String(err) });
@@ -48,30 +34,83 @@ function doPost(e) {
   }
 }
 
-/** Permet de tester l'URL dans le navigateur (doit afficher un petit message). */
 function doGet() {
-  return ContentService.createTextOutput(
-    "CleanTheClub : endpoint actif ✅"
-  ).setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput("Inscription Nettoyage " + VERSION + " : endpoint actif ✅")
+    .setMimeType(ContentService.MimeType.TEXT);
 }
 
-/** Récupère (ou crée) la feuille avec ses en-têtes. */
 function getSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-  }
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(ENTETES);
     sheet.getRange(1, 1, 1, ENTETES.length).setFontWeight("bold");
     sheet.setFrozenRows(1);
   }
+  if (sheet.getRange(1, 7).getValue() !== "Statut email") {
+    sheet.getRange(1, 7).setValue("Statut email").setFontWeight("bold");
+  }
   return sheet;
 }
 
 function jsonOut_(obj) {
-  return ContentService.createTextOutput(
-    JSON.stringify(obj)
-  ).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Envoie l'email via Brevo et RENVOIE un texte de statut (écrit dans la feuille). */
+function envoyerConfirmation_(p) {
+  if (!ENVOYER_EMAIL) return "désactivé";
+  var email = (p.email || "").trim();
+  if (!email) return "pas d'email fourni";
+  try {
+    var prenom = (p.prenom || "").trim();
+    var bonjour = prenom ? "Bonjour " + prenom : "Bonjour";
+    var html =
+      '<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:auto;border:1px solid #eee;border-radius:14px;overflow:hidden">' +
+        '<div style="background:#0c3327;color:#fff;padding:22px 24px;text-align:center">' +
+          '<div style="letter-spacing:2px;font-size:12px;color:#ffd9e1">RUGBY CLUB LA HULPE · ONE TEAM</div>' +
+          '<h1 style="margin:8px 0 0;font-size:22px;color:#f00050">Inscription confirmée !</h1>' +
+        '</div>' +
+        '<div style="padding:24px;color:#222;font-size:15px;line-height:1.55">' +
+          '<p>' + bonjour + ',</p>' +
+          '<p>Merci, ton inscription pour la journée <strong>« Notre club, notre fierté, nettoyons-le ! »</strong> est bien enregistrée. 💚</p>' +
+          '<table style="width:100%;border-collapse:collapse;margin:18px 0">' +
+            ligne_("📅", "Dimanche 5 juillet, dès 10h") +
+            ligne_("📍", "Avenue Ernest Solvay 43, 1310 La Hulpe") +
+            ligne_("🍖", "Barbecue en fin de journée") +
+            ligne_("👥", "Participants : " + (p.participants || "1")) +
+          '</table>' +
+          '<p>On compte sur toi. Chaque geste compte !</p>' +
+          '<p style="color:#701222;font-style:italic;margin-top:24px">Semper fidelis — Former des joueurs, construire des personnes.</p>' +
+        '</div>' +
+      '</div>';
+    var texte = bonjour + ",\n\nMerci, ton inscription est bien enregistrée.\n\nDimanche 5 juillet dès 10h\nAvenue Ernest Solvay 43, 1310 La Hulpe\nBarbecue en fin de journée\nParticipants : " + (p.participants || "1") + "\n\nSemper fidelis — Rugby Club La Hulpe";
+
+    var payload = {
+      sender: { name: EXPEDITEUR, email: SENDER_EMAIL },
+      to: [{ email: email, name: (prenom + " " + (p.nom || "")).trim() || email }],
+      replyTo: { email: REPONDRE_A, name: EXPEDITEUR },
+      subject: "Inscription confirmée — Nettoyons notre club ! 🏉",
+      htmlContent: html,
+      textContent: texte
+    };
+    var resp = UrlFetchApp.fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "post",
+      contentType: "application/json",
+      headers: { "api-key": BREVO_API_KEY, "accept": "application/json" },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    var code = resp.getResponseCode();
+    if (code === 201 || code === 200) return "ENVOYÉ ✅";
+    return "ERREUR Brevo " + code + " : " + resp.getContentText();
+  } catch (err) {
+    return "ERREUR: " + err;
+  }
+}
+
+function ligne_(ico, texte) {
+  return '<tr><td style="padding:6px 10px 6px 0;font-size:18px;width:28px">' + ico +
+    '</td><td style="padding:6px 0;color:#0c3327;font-weight:600">' + texte + '</td></tr>';
 }

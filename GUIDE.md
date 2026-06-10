@@ -59,6 +59,20 @@ Le formulaire doit envoyer les inscriptions quelque part. On utilise un **Google
 > ✅ Test rapide : colle cette URL dans ton navigateur. Tu dois voir le message
 > *« CleanTheClub : endpoint actif ✅ »*. Si oui, c'est bon !
 
+### ✉️ Email de confirmation automatique
+Le script envoie aussi **un email de confirmation à chaque inscrit** (couleurs du club,
+rappel date/lieu/barbecue). C'est activé par défaut.
+
+- À la **première autorisation** (étape B8), Google te demandera en plus la permission
+  d'**envoyer des emails en ton nom** : accepte-la.
+- L'envoi part de **ton adresse Gmail**. Quota : ~100 emails/jour (compte perso) ou
+  1500/jour (Google Workspace) — large pour l'événement.
+- Pour **désactiver** les emails : dans `Code.gs`, mets `var ENVOYER_EMAIL = false;`
+  puis redéploie.
+
+> ⚠️ Si tu modifies `Code.gs` plus tard, pense à **redéployer** :
+> Déployer > Gérer les déploiements > ✏️ Modifier > Version : *Nouvelle version* > Déployer.
+
 ---
 
 ## 🅲️ Partie C — Brancher la page sur ton Google Sheet
@@ -97,13 +111,13 @@ L'adresse GitHub est un peu longue à taper. Pour un lien facile à retenir :
 
 1. Va sur [tinyurl.com](https://tinyurl.com).
 2. Colle ton adresse `https://jeromevde77.github.io/cleanthebar-/`.
-3. Dans *« Customize »*, mets un alias mémorisable, par ex. **`cleantheclub`**.
-4. Tu obtiens : `https://tinyurl.com/cleantheclub` — parfait pour les réseaux et le bouche-à-oreille.
+3. Dans *« Customize »*, mets un alias mémorisable, par ex. **`rclh-clean`**.
+4. Tu obtiens : `https://tinyurl.com/rclh-clean` — parfait pour les réseaux et le bouche-à-oreille.
 
 > 🔁 Si tu préfères que le **QR code** pointe vers ce lien court (ou vers un lien `rclh.be`
 > plus tard), regénère-le :
 > ```
-> python3 tools/generate_qr.py https://tinyurl.com/cleantheclub
+> python3 tools/generate_qr.py https://tinyurl.com/rclh-clean
 > ```
 
 ---
