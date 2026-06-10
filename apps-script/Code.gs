@@ -1,5 +1,5 @@
 /**
- * CleanTheClub — Rugby Club La Hulpe
+ * Inscription Nettoyage — Rugby Club La Hulpe
  * Backend Google Apps Script : enregistre chaque inscription
  * dans une feuille Google Sheet.
  *
@@ -57,7 +57,7 @@ function doPost(e) {
 /** Permet de tester l'URL dans le navigateur (doit afficher un petit message). */
 function doGet() {
   return ContentService.createTextOutput(
-    "CleanTheClub : endpoint actif ✅"
+    "Inscription Nettoyage : endpoint actif ✅"
   ).setMimeType(ContentService.MimeType.TEXT);
 }
 
