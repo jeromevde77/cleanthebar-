@@ -1,55 +1,28 @@
 /**
  * Inscription Nettoyage — Rugby Club La Hulpe
- * Backend Google Apps Script : enregistre chaque inscription
- * dans une feuille Google Sheet.
- *
- * Installation : voir GUIDE.md (étape 2).
- * En résumé :
- *   1. Crée un Google Sheet.
- *   2. Extensions > Apps Script, colle ce code.
- *   3. Déployer > Nouveau déploiement > "Application Web"
- *      - Exécuter en tant que : Moi
- *      - Qui a accès : "Tout le monde"
- *   4. Copie l'URL /exec et colle-la dans assets/script.js
+ * Enregistre chaque inscription dans une feuille Google Sheet
+ * et envoie un email de confirmation à l'inscrit.
+ * Le statut de l'email est écrit dans la colonne "Statut email".
  */
 
+var VERSION = "v7";
 var SHEET_NAME = "Inscriptions";
-var ENTETES = [
-  "Horodatage",
-  "Prénom",
-  "Nom",
-  "Email",
-  "Téléphone",
-  "Nb participants",
-];
+var ENTETES = ["Horodatage", "Prénom", "Nom", "Email", "Téléphone", "Nb participants", "Statut email"];
 
-var VERSION = "v6"; // marqueur pour vérifier quelle version est déployée
-
-// --- Email de confirmation envoyé à l'inscrit ---
-var ENVOYER_EMAIL = true; // mettre à false pour désactiver
+var ENVOYER_EMAIL = true;
 var EXPEDITEUR = "Rugby Club La Hulpe";
-var REPONDRE_A = "contact@rugbylahulpe.be"; // adresse de réponse (mets celle du club)
+var REPONDRE_A = "contact@rugbylahulpe.be";
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
-    console.log("doPost " + VERSION + " démarré");
-    lock.waitLock(20000); // évite les écritures simultanées
-
+    lock.waitLock(20000);
     var sheet = getSheet_();
     var p = (e && e.parameter) || {};
-
-    sheet.appendRow([
-      new Date(),
-      p.prenom || "",
-      p.nom || "",
-      p.email || "",
-      p.telephone || "",
-      p.participants || "",
-    ]);
-
-    envoyerConfirmation_(p); // email de confirmation (sans bloquer l'inscription)
-
+    sheet.appendRow([new Date(), p.prenom||"", p.nom||"", p.email||"", p.telephone||"", p.participants||"", ""]);
+    var row = sheet.getLastRow();
+    var statut = envoyerConfirmation_(p);     // renvoie le statut de l'email
+    sheet.getRange(row, 7).setValue(statut);  // écrit le statut dans la colonne G
     return jsonOut_({ result: "ok" });
   } catch (err) {
     return jsonOut_({ result: "error", message: String(err) });
@@ -58,47 +31,39 @@ function doPost(e) {
   }
 }
 
-/** Permet de tester l'URL dans le navigateur (doit afficher un petit message). */
 function doGet() {
-  return ContentService.createTextOutput(
-    "Inscription Nettoyage " + VERSION + " : endpoint actif ✅"
-  ).setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput("Inscription Nettoyage " + VERSION + " : endpoint actif ✅")
+    .setMimeType(ContentService.MimeType.TEXT);
 }
 
-/** Récupère (ou crée) la feuille avec ses en-têtes. */
 function getSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-  }
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(ENTETES);
     sheet.getRange(1, 1, 1, ENTETES.length).setFontWeight("bold");
     sheet.setFrozenRows(1);
   }
+  // garantit l'en-tête de la colonne statut même sur une feuille déjà existante
+  if (sheet.getRange(1, 7).getValue() !== "Statut email") {
+    sheet.getRange(1, 7).setValue("Statut email").setFontWeight("bold");
+  }
   return sheet;
 }
 
 function jsonOut_(obj) {
-  return ContentService.createTextOutput(
-    JSON.stringify(obj)
-  ).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-/**
- * Envoie un email de confirmation à l'inscrit.
- * Une erreur d'envoi n'interrompt jamais l'inscription (try/catch).
- */
+/** Envoie l'email et RENVOIE un texte de statut (écrit dans la feuille). */
 function envoyerConfirmation_(p) {
-  if (!ENVOYER_EMAIL) return;
+  if (!ENVOYER_EMAIL) return "désactivé";
   var email = (p.email || "").trim();
-  if (!email) { console.log("CONFIRM: pas d'email dans l'inscription"); return; }
-
+  if (!email) return "pas d'email fourni";
   try {
     var prenom = (p.prenom || "").trim();
     var bonjour = prenom ? "Bonjour " + prenom : "Bonjour";
-
     var html =
       '<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:auto;border:1px solid #eee;border-radius:14px;overflow:hidden">' +
         '<div style="background:#0c3327;color:#fff;padding:22px 24px;text-align:center">' +
@@ -118,37 +83,15 @@ function envoyerConfirmation_(p) {
           '<p style="color:#701222;font-style:italic;margin-top:24px">Semper fidelis — Former des joueurs, construire des personnes.</p>' +
         '</div>' +
       '</div>';
-
-    var texte =
-      (bonjour) + ",\n\n" +
-      "Merci, ton inscription pour la journée « Notre club, notre fierté, nettoyons-le ! » est bien enregistrée.\n\n" +
-      "Dimanche 5 juillet, dès 10h\n" +
-      "Avenue Ernest Solvay 43, 1310 La Hulpe\n" +
-      "Barbecue en fin de journée\n" +
-      "Participants : " + (p.participants || "1") + "\n\n" +
-      "On compte sur toi. Chaque geste compte !\n\n" +
-      "Semper fidelis — Rugby Club La Hulpe";
-
-    MailApp.sendEmail({
-      to: email,
-      subject: "Inscription confirmée — Nettoyons notre club ! 🏉",
-      body: texte, // version texte (améliore la délivrabilité)
-      htmlBody: html,
-      name: EXPEDITEUR,
-      replyTo: REPONDRE_A,
-    });
-    console.log("CONFIRM: email ENVOYÉ à " + email);
+    var texte = bonjour + ",\n\nMerci, ton inscription est bien enregistrée.\n\nDimanche 5 juillet dès 10h\nAvenue Ernest Solvay 43, 1310 La Hulpe\nBarbecue en fin de journée\nParticipants : " + (p.participants || "1") + "\n\nSemper fidelis — Rugby Club La Hulpe";
+    MailApp.sendEmail({ to: email, subject: "Inscription confirmée — Nettoyons notre club ! 🏉", body: texte, htmlBody: html, name: EXPEDITEUR, replyTo: REPONDRE_A });
+    return "ENVOYÉ ✅";
   } catch (err) {
-    // Email non envoyé (quota, adresse invalide…) : l'inscription reste valide.
-    console.error("CONFIRM: email KO : " + err);
+    return "ERREUR: " + err;
   }
 }
 
 function ligne_(ico, texte) {
-  return (
-    '<tr>' +
-      '<td style="padding:6px 10px 6px 0;font-size:18px;width:28px">' + ico + '</td>' +
-      '<td style="padding:6px 0;color:#0c3327;font-weight:600">' + texte + '</td>' +
-    '</tr>'
-  );
+  return '<tr><td style="padding:6px 10px 6px 0;font-size:18px;width:28px">' + ico +
+    '</td><td style="padding:6px 0;color:#0c3327;font-weight:600">' + texte + '</td></tr>';
 }
