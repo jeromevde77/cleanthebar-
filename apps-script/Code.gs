@@ -23,6 +23,8 @@ var ENTETES = [
   "Nb participants",
 ];
 
+var VERSION = "v6"; // marqueur pour vérifier quelle version est déployée
+
 // --- Email de confirmation envoyé à l'inscrit ---
 var ENVOYER_EMAIL = true; // mettre à false pour désactiver
 var EXPEDITEUR = "Rugby Club La Hulpe";
@@ -31,6 +33,7 @@ var REPONDRE_A = "contact@rugbylahulpe.be"; // adresse de réponse (mets celle d
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
+    console.log("doPost " + VERSION + " démarré");
     lock.waitLock(20000); // évite les écritures simultanées
 
     var sheet = getSheet_();
@@ -58,7 +61,7 @@ function doPost(e) {
 /** Permet de tester l'URL dans le navigateur (doit afficher un petit message). */
 function doGet() {
   return ContentService.createTextOutput(
-    "Inscription Nettoyage : endpoint actif ✅"
+    "Inscription Nettoyage " + VERSION + " : endpoint actif ✅"
   ).setMimeType(ContentService.MimeType.TEXT);
 }
 
