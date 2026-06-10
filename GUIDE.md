@@ -59,6 +59,20 @@ Le formulaire doit envoyer les inscriptions quelque part. On utilise un **Google
 > ✅ Test rapide : colle cette URL dans ton navigateur. Tu dois voir le message
 > *« CleanTheClub : endpoint actif ✅ »*. Si oui, c'est bon !
 
+### ✉️ Email de confirmation automatique
+Le script envoie aussi **un email de confirmation à chaque inscrit** (couleurs du club,
+rappel date/lieu/barbecue). C'est activé par défaut.
+
+- À la **première autorisation** (étape B8), Google te demandera en plus la permission
+  d'**envoyer des emails en ton nom** : accepte-la.
+- L'envoi part de **ton adresse Gmail**. Quota : ~100 emails/jour (compte perso) ou
+  1500/jour (Google Workspace) — large pour l'événement.
+- Pour **désactiver** les emails : dans `Code.gs`, mets `var ENVOYER_EMAIL = false;`
+  puis redéploie.
+
+> ⚠️ Si tu modifies `Code.gs` plus tard, pense à **redéployer** :
+> Déployer > Gérer les déploiements > ✏️ Modifier > Version : *Nouvelle version* > Déployer.
+
 ---
 
 ## 🅲️ Partie C — Brancher la page sur ton Google Sheet

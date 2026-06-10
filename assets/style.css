@@ -30,7 +30,7 @@ body {
     radial-gradient(1200px 600px at 50% -10%, var(--vert-clair) 0%, var(--vert) 55%, #07261d 100%);
   min-height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 24px 16px;
   line-height: 1.45;
