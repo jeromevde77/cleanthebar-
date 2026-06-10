@@ -26,6 +26,7 @@ var ENTETES = [
 // --- Email de confirmation envoyé à l'inscrit ---
 var ENVOYER_EMAIL = true; // mettre à false pour désactiver
 var EXPEDITEUR = "Rugby Club La Hulpe";
+var REPONDRE_A = "communication@rclh.be"; // adresse de réponse (mets celle du club)
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -115,11 +116,23 @@ function envoyerConfirmation_(p) {
         '</div>' +
       '</div>';
 
+    var texte =
+      (bonjour) + ",\n\n" +
+      "Merci, ton inscription pour la journée « Notre club, notre fierté, nettoyons-le ! » est bien enregistrée.\n\n" +
+      "Dimanche 5 juillet, dès 10h\n" +
+      "Avenue Ernest Solvay 43, 1310 La Hulpe\n" +
+      "Barbecue en fin de journée\n" +
+      "Participants : " + (p.participants || "1") + "\n\n" +
+      "On compte sur toi. Chaque geste compte !\n\n" +
+      "Semper fidelis — Rugby Club La Hulpe";
+
     MailApp.sendEmail({
       to: email,
       subject: "Inscription confirmée — Nettoyons notre club ! 🏉",
+      body: texte, // version texte (améliore la délivrabilité)
       htmlBody: html,
       name: EXPEDITEUR,
+      replyTo: REPONDRE_A,
     });
   } catch (err) {
     // Email non envoyé (quota, adresse invalide…) : l'inscription reste valide.
