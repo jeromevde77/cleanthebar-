@@ -90,7 +90,7 @@ function jsonOut_(obj) {
 function envoyerConfirmation_(p) {
   if (!ENVOYER_EMAIL) return;
   var email = (p.email || "").trim();
-  if (!email) return;
+  if (!email) { console.log("CONFIRM: pas d'email dans l'inscription"); return; }
 
   try {
     var prenom = (p.prenom || "").trim();
@@ -134,8 +134,10 @@ function envoyerConfirmation_(p) {
       name: EXPEDITEUR,
       replyTo: REPONDRE_A,
     });
+    console.log("CONFIRM: email ENVOYÉ à " + email);
   } catch (err) {
     // Email non envoyé (quota, adresse invalide…) : l'inscription reste valide.
+    console.error("CONFIRM: email KO : " + err);
   }
 }
 
