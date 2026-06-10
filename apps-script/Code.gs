@@ -5,7 +5,7 @@
  * Le statut de l'email est écrit dans la colonne "Statut email".
  */
 
-var VERSION = "v7";
+var VERSION = "v8";
 var SHEET_NAME = "Inscriptions";
 var ENTETES = ["Horodatage", "Prénom", "Nom", "Email", "Téléphone", "Nb participants", "Statut email"];
 
@@ -84,7 +84,7 @@ function envoyerConfirmation_(p) {
         '</div>' +
       '</div>';
     var texte = bonjour + ",\n\nMerci, ton inscription est bien enregistrée.\n\nDimanche 5 juillet dès 10h\nAvenue Ernest Solvay 43, 1310 La Hulpe\nBarbecue en fin de journée\nParticipants : " + (p.participants || "1") + "\n\nSemper fidelis — Rugby Club La Hulpe";
-    MailApp.sendEmail({ to: email, subject: "Inscription confirmée — Nettoyons notre club ! 🏉", body: texte, htmlBody: html, name: EXPEDITEUR, replyTo: REPONDRE_A });
+    GmailApp.sendEmail(email, "Inscription confirmée — Nettoyons notre club ! 🏉", texte, { htmlBody: html, name: EXPEDITEUR, replyTo: REPONDRE_A });
     return "ENVOYÉ ✅";
   } catch (err) {
     return "ERREUR: " + err;
