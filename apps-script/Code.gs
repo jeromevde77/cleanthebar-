@@ -1,17 +1,20 @@
 /**
  * Inscription Nettoyage — Rugby Club La Hulpe
  * Enregistre chaque inscription dans une feuille Google Sheet
- * et envoie un email de confirmation à l'inscrit.
+ * et envoie un email de confirmation via Brevo (API transactionnelle).
  * Le statut de l'email est écrit dans la colonne "Statut email".
  */
 
-var VERSION = "v8";
+var VERSION = "v9";
 var SHEET_NAME = "Inscriptions";
 var ENTETES = ["Horodatage", "Prénom", "Nom", "Email", "Téléphone", "Nb participants", "Statut email"];
 
+// --- Email de confirmation (via Brevo) ---
 var ENVOYER_EMAIL = true;
 var EXPEDITEUR = "Rugby Club La Hulpe";
-var REPONDRE_A = "contact@rugbylahulpe.be";
+var BREVO_API_KEY = "COLLE_TA_CLE_API_BREVO_ICI";        // clé API v3 (Brevo > SMTP & API)
+var SENDER_EMAIL  = "contact@rugbylahulpe.be";           // doit être un expéditeur VÉRIFIÉ dans Brevo
+var REPONDRE_A    = "contact@rugbylahulpe.be";           // adresse de réponse
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -21,8 +24,8 @@ function doPost(e) {
     var p = (e && e.parameter) || {};
     sheet.appendRow([new Date(), p.prenom||"", p.nom||"", p.email||"", p.telephone||"", p.participants||"", ""]);
     var row = sheet.getLastRow();
-    var statut = envoyerConfirmation_(p);     // renvoie le statut de l'email
-    sheet.getRange(row, 7).setValue(statut);  // écrit le statut dans la colonne G
+    var statut = envoyerConfirmation_(p);
+    sheet.getRange(row, 7).setValue(statut);
     return jsonOut_({ result: "ok" });
   } catch (err) {
     return jsonOut_({ result: "error", message: String(err) });
@@ -45,7 +48,6 @@ function getSheet_() {
     sheet.getRange(1, 1, 1, ENTETES.length).setFontWeight("bold");
     sheet.setFrozenRows(1);
   }
-  // garantit l'en-tête de la colonne statut même sur une feuille déjà existante
   if (sheet.getRange(1, 7).getValue() !== "Statut email") {
     sheet.getRange(1, 7).setValue("Statut email").setFontWeight("bold");
   }
@@ -56,7 +58,7 @@ function jsonOut_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-/** Envoie l'email et RENVOIE un texte de statut (écrit dans la feuille). */
+/** Envoie l'email via Brevo et RENVOIE un texte de statut (écrit dans la feuille). */
 function envoyerConfirmation_(p) {
   if (!ENVOYER_EMAIL) return "désactivé";
   var email = (p.email || "").trim();
@@ -84,8 +86,25 @@ function envoyerConfirmation_(p) {
         '</div>' +
       '</div>';
     var texte = bonjour + ",\n\nMerci, ton inscription est bien enregistrée.\n\nDimanche 5 juillet dès 10h\nAvenue Ernest Solvay 43, 1310 La Hulpe\nBarbecue en fin de journée\nParticipants : " + (p.participants || "1") + "\n\nSemper fidelis — Rugby Club La Hulpe";
-    GmailApp.sendEmail(email, "Inscription confirmée — Nettoyons notre club ! 🏉", texte, { htmlBody: html, name: EXPEDITEUR, replyTo: REPONDRE_A });
-    return "ENVOYÉ ✅";
+
+    var payload = {
+      sender: { name: EXPEDITEUR, email: SENDER_EMAIL },
+      to: [{ email: email, name: (prenom + " " + (p.nom || "")).trim() || email }],
+      replyTo: { email: REPONDRE_A, name: EXPEDITEUR },
+      subject: "Inscription confirmée — Nettoyons notre club ! 🏉",
+      htmlContent: html,
+      textContent: texte
+    };
+    var resp = UrlFetchApp.fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "post",
+      contentType: "application/json",
+      headers: { "api-key": BREVO_API_KEY, "accept": "application/json" },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    var code = resp.getResponseCode();
+    if (code === 201 || code === 200) return "ENVOYÉ ✅";
+    return "ERREUR Brevo " + code + " : " + resp.getContentText();
   } catch (err) {
     return "ERREUR: " + err;
   }
